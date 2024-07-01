@@ -11,7 +11,13 @@ class HHAPIClient(APIClient):
     def base_url(self) -> str:
         return self.__base_url
 
-    def search_employers(self, search, *, only_with_vacancies=True):
+    def search_employers(self, search: str, *, only_with_vacancies=True) -> list[Employer]:
+        """
+        метод для получения списка вакансий
+        :param search:
+        :param only_with_vacancies:
+        :return:
+        """
         params = {
             'text': search,
             'only_with_vacancies': only_with_vacancies
@@ -27,7 +33,12 @@ class HHAPIClient(APIClient):
             for emp in employers
         ]
 
-    def search_vacancies(self, employer_id):
+    def search_vacancies(self, employer_id: int) -> list[Vacancy]:
+        """
+        метод для получения списка вакансий
+        :param employer_id:
+        :return:
+        """
         params = {
             'employer_id': employer_id,
             'only_with_salary': True
@@ -45,7 +56,13 @@ class HHAPIClient(APIClient):
             for vac in vacancies
         ]
 
-    def get_items(self, url, params) -> list[dict]:
+    def get_items(self, url: str, params: dict) -> list[dict]:
+        """
+        метод для  считывания полного списка данных со всех страниц
+        :param url:
+        :param params:
+        :return:
+        """
         items = []
         params['page'] = 0
         params['per_pages'] = 100

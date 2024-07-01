@@ -4,7 +4,13 @@ from api_clients.employer_info import Employer
 from api_clients.vacancy_info import Vacancy
 
 
-def create_databases(database_name, params):
+def create_databases(database_name: str, params: dict) -> None:
+    """
+    функция создания БД для хранения данных о вакансиях и работодателях
+    :param database_name:
+    :param params:
+    :return:
+    """
     conn = psycopg2.connect(dbname='postgres', **params)
     conn.autocommit = True
     cur = conn.cursor()
@@ -16,7 +22,13 @@ def create_databases(database_name, params):
     conn.close()
 
 
-def create_schema(database_name, params):
+def create_schema(database_name: str, params: dict) -> None:
+    """
+    создание таблиц, в которых будут хзраниться данные о вакансиях и работодателях
+    :param database_name:
+    :param params:
+    :return:
+    """
     conn = psycopg2.connect(dbname=database_name, **params)
     conn.autocommit = True
     with conn.cursor() as cur:
@@ -50,7 +62,14 @@ def create_schema(database_name, params):
     conn.close()
 
 
-def save_emp_to_database(data: Employer, database_name, params):
+def save_emp_to_database(data: Employer, database_name: str, params: dict) -> None:
+    """
+    функция для запомнения таблицы данными о работодателях
+    :param data:
+    :param database_name:
+    :param params:
+    :return:
+    """
     conn = psycopg2.connect(dbname=database_name, **params)
     with conn.cursor() as cur:
         #for emp in data:
@@ -63,7 +82,14 @@ def save_emp_to_database(data: Employer, database_name, params):
     conn.close()
 
 
-def save_vac_to_database(data: list[Vacancy], database_name, params):
+def save_vac_to_database(data: list[Vacancy], database_name: str, params: dict) -> None:
+    """
+    функция для заполнения таблицы данными о вакансиях
+    :param data:
+    :param database_name:
+    :param params:
+    :return:
+    """
     conn = psycopg2.connect(dbname=database_name, **params)
     with conn.cursor() as cur:
         for vac in data:

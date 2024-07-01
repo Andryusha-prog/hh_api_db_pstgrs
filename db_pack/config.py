@@ -1,7 +1,13 @@
 from configparser import ConfigParser
 
 
-def config(filename="db_pack/database.ini", section="postgresql"):
+def config(filename="db_pack/database.ini", section="postgresql") -> dict:
+    """
+    функция для подключения к БД
+    :param filename:
+    :param section:
+    :return:
+    """
     parser = ConfigParser()
     parser.read(filename)
     db = {}

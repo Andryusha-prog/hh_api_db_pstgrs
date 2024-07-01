@@ -1,79 +1,57 @@
-from prettytable import PrettyTable
-
-from api_clients.hh_client import HHAPIClient
-from db_pack.config import config
-from db_pack.db_create import create_databases, create_schema, save_emp_to_database, save_vac_to_database
 from db_pack.db_manager import DBManager
+from main_func import first_step_function
 
 
 def main():
-    '''#list_company = ['', 'альфа', 'VK', 'яндекс', 'мегафон', 'точка', '', 'газпром', 'мтс', 'авито']
-    list_company = ['ixora', 'альфа', 'VK', 'Хекслет', 'мегафон', 'точка', 'skypro', 'додо', 'мтс', 'авито']
-    hh_client = HHAPIClient()
-    for company in list_company:
-        employers = hh_client.search_employers(company)
-        table = PrettyTable(field_names=['ID', 'Название компании', 'Ссылка', 'Кол-во вакансий'])
-        table.sortby = 'Кол-во вакансий'
-        table.reversesort = True
-        for emp in employers:
-            table.add_row([emp.id, emp.name, emp.url, emp.open_vacancies])
+    while True:
+        input_first_step = input("""Приветствую!!!
+        При первом запуске программы необходимо заполнить БД данными:
+        Введите любую цифру для заполнения БД данными:
+        Для выхода введите цифру 0: \n""")
 
-
-        print(table)
-
-        #vacancies = hh_client.search_vacancies(78638)
-'''
-    '''table = PrettyTable(field_names=['ID', 'Название компании', 'Ссылка', 'Кол-во вакансий'])
-    table.sortby = 'Кол-во вакансий'
-    table.reversesort = True
-    for emp in employers:
-        table.add_row([emp.id, emp.name, emp.url, emp.open_vacancies])
-
-    print(table)
-
-    vacancies = hh_client.search_vacancies(78638)
-    #for vac in vacancies:
-     #   print(vac)
-    print(len(vacancies))
-'''
-
-    db_man = DBManager('localhost', 'hh_api', 'postgres', 'admin', 5432)
-    try:
-        db_man.connect()
-        resul = db_man.get_companies_and_vacancies_count()
-        res2 = db_man.get_all_vacancies()
-        res3 = db_man.get_avg_salary()
-        res4 = db_man.get_vacancies_with_higher_salary()
-        res5 = db_man.get_vacancies_with_keyword('python')
-        print('1111111')
-        print(resul)
-        print(res2)
-        print('avg_sal', res3)
-        print(res4)
-        print(res5)
-    finally:
-        db_man.disconnect()
-
-    '''params = config()
-
-    create_databases('hh_api', params)
-    create_schema('hh_api', params)
-
-    list_company = ['ixora', 'позитив', 'VK', 'Хекслет', 'софтлайн', 'точка', 'skypro', 'додо', 'айтеко', 'авито']
-    hh_client = HHAPIClient()
-    for company in list_company:
-        employers = hh_client.search_employers(company)
-        max_zn = max([emp.open_vacancies for emp in employers])
-        for emp in employers:
-            if emp.open_vacancies == max_zn:
-                save_emp_to_database(emp, 'hh_api', params)
-                print(emp)
-                vacancies = hh_client.search_vacancies(emp.id)
-                save_vac_to_database(vacancies, 'hh_api', params)
+        if input_first_step.isdigit():
+            if int(input_first_step) == 0:
                 break
-                '''
+            else:
+                first_step_function()
+
+                while True:
+                    input_sec_step = input("""Теперь можно работать с выборками данных
+                    Выберите нужный пункт:
+                    1 - список всех компаний и количество вакансий у каждой компании;
+                    2 - список всех вакансий с указанием названия компании, названия вакансии и зарплаты и ссылки на вакансию;
+                    3 - выводит среднюю зарплату по вакансиям;
+                    4 - список всех вакансий, у которых зарплата выше средней по всем вакансиям;
+                    5 - писок всех вакансий, в названии которых содержатся переданные в метод слова
+                    0 - в предыдущее меню \n""")
+
+                    if int(input_sec_step) == 0:
+                        break
+                    else:
+                        db_man = DBManager('localhost', 'hh_api', 'postgres', 'admin', 5432)
+                        try:
+                            db_man.connect()
+                            if int(input_sec_step) == 1:
+                                print(db_man.get_companies_and_vacancies_count())
+                            elif int(input_sec_step) == 2:
+                                print(db_man.get_all_vacancies())
+                            elif int(input_sec_step) == 3:
+                                print(db_man.get_avg_salary())
+                            elif int(input_sec_step) == 4:
+                                print(db_man.get_vacancies_with_higher_salary())
+                            elif int(input_sec_step) == 5:
+                                input_search_word = input('Введите слово для поиска \n')
+                                print(db_man.get_vacancies_with_keyword(input_search_word))
+                        finally:
+                            db_man.disconnect()
+                            #break
 
 
+
+
+
+        else:
+            continue
 
 
 if __name__ == '__main__':
