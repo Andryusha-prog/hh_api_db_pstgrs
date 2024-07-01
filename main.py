@@ -3,6 +3,7 @@ from prettytable import PrettyTable
 from api_clients.hh_client import HHAPIClient
 from db_pack.config import config
 from db_pack.db_create import create_databases, create_schema, save_emp_to_database, save_vac_to_database
+from db_pack.db_manager import DBManager
 
 
 def main():
@@ -36,7 +37,24 @@ def main():
     print(len(vacancies))
 '''
 
-    params = config()
+    db_man = DBManager('localhost', 'hh_api', 'postgres', 'admin', 5432)
+    try:
+        db_man.connect()
+        resul = db_man.get_companies_and_vacancies_count()
+        res2 = db_man.get_all_vacancies()
+        res3 = db_man.get_avg_salary()
+        res4 = db_man.get_vacancies_with_higher_salary()
+        res5 = db_man.get_vacancies_with_keyword('python')
+        print('1111111')
+        print(resul)
+        print(res2)
+        print('avg_sal', res3)
+        print(res4)
+        print(res5)
+    finally:
+        db_man.disconnect()
+
+    '''params = config()
 
     create_databases('hh_api', params)
     create_schema('hh_api', params)
@@ -53,11 +71,10 @@ def main():
                 vacancies = hh_client.search_vacancies(emp.id)
                 save_vac_to_database(vacancies, 'hh_api', params)
                 break
-        '''save_emp_to_database(employers, 'hh_api', params)
-        for emp in employers:
-            vacancies = hh_client.search_vacancies(emp.id)
-            save_vac_to_database(vacancies, 'hh_api', params)
-'''
+                '''
+
+
+
 
 if __name__ == '__main__':
     main()
